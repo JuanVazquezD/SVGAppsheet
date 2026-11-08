@@ -1,0 +1,75 @@
+<!doctype html>
+<html lang="es"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>SVG a AppSheet</title>
+<meta name="description" content="Convierte un SVG en una expresión de AppSheet con variables dinámicas.">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=Public+Sans:wght@400;500;600;700&display=swap">
+<link rel="stylesheet" href="styles.css">
+</head><body>
+
+
+<header class="top">
+  <div class="brand">SVG a AppSheet<small>Convierte un SVG en una expresión con variables dinámicas</small></div>
+  <div class="grp"><label for="selProj">Proyecto</label>
+    <select id="selProj"></select><input type="text" id="nameProj" aria-label="Nombre del proyecto">
+    <button class="btn sm" id="addProj" title="Nuevo proyecto">+ Nuevo</button><button class="btn sm" id="delProj">Eliminar</button></div>
+  <div class="grp"><label for="selDes">Diseño</label>
+    <select id="selDes"></select><input type="text" id="nameDes" aria-label="Nombre del diseño">
+    <button class="btn sm" id="addDes">+ Nuevo</button><button class="btn sm" id="dupDes">Duplicar</button><button class="btn sm" id="delDes">Eliminar</button></div>
+  <button class="btn sm" id="syncBtn">Sincronizar con Sheets</button><span id="saveState" aria-live="polite"></span>
+</header>
+
+<main class="grid">
+  <div class="col">
+    <section class="card" id="codeBox">
+      <div class="ch"><h2>Código SVG original</h2>
+        <div class="seg" role="group" aria-label="Modo"><button id="mEdit" aria-pressed="false">Editar</button><button id="mView" aria-pressed="true">Resaltado</button></div>
+        <button class="btn sm" id="upl">Subir archivo</button><button class="btn sm" id="exm">Ejemplo</button>
+        <input type="file" id="file" accept=".svg,.txt,image/svg+xml,text/plain" hidden></div>
+      <textarea class="code" id="src" spellcheck="false" placeholder="Pega aquí el código SVG, o usa «Subir archivo»." hidden></textarea>
+      <div class="code" id="codeView" tabindex="0" aria-label="Código resaltado"></div>
+      <div class="cf"><div class="legend">
+        <span class="tk-var">[variable]</span><span class="tk-col" style="background:#2f7d6d;color:#fff">#color</span><span class="tk-frag">sustitución</span><span class="flg">CSS / JS</span></div>
+        <div id="clean"></div></div>
+    </section>
+    <section class="card"><div class="ch"><h2>Vista previa</h2><span class="hexl">Pasa el cursor sobre la imagen para ubicar su código</span></div>
+      <div class="pv" id="preview"></div></section>
+  </div>
+  <div class="col">
+    <section class="card" id="canvasBox">
+      <div class="ch"><h2>Lienzo AppSheet</h2>
+        <button class="btn sm pri" id="copy">Copiar</button><button class="btn sm" id="dl">Descargar .txt</button></div>
+      <div class="code" id="canvas" aria-label="Expresión para AppSheet"></div>
+      <div class="cf" id="cinfo"></div>
+    </section>
+    <section class="card"><div class="ch"><h2>Variables y sustituciones</h2><button class="btn sm" id="addRow">+ Agregar sustitución</button></div>
+      <div class="tw"><table><thead><tr><th>Objetivo</th><th>Tipo</th><th>Valor</th><th>Muestra</th><th></th></tr></thead><tbody id="rows"></tbody></table></div>
+      <div class="cf">«Muestra» solo alimenta la vista previa. Selecciona texto en el código o en el lienzo para sustituirlo.</div>
+    </section>
+  </div>
+</main>
+
+<section class="card" style="margin-top:12px">
+  <div class="tabs" role="tablist"><button role="tab" id="tabPal" aria-selected="true">Paleta HEX</button><button role="tab" id="tabNot" aria-selected="false">Notas del proyecto</button></div>
+  <div class="tp" id="panePal"></div>
+  <div class="tp" id="paneNot" hidden>
+    <div class="notes"><div><h3>Notas del proyecto (valen para todos sus diseños)</h3><textarea id="notesP" placeholder="Colores oficiales, medidas, convenciones de nombres de columnas…"></textarea></div>
+    <div><h3>Notas de este diseño</h3><textarea id="notesD" placeholder="Qué columnas alimenta, versión, pendientes…"></textarea></div></div>
+    <div class="dl" id="dlist"></div>
+  </div>
+</section>
+<section class="card sync" id="syncBox" hidden>
+  <div class="ch"><h2>Google Sheets</h2><button class="btn sm" id="syncClose">Cerrar</button></div>
+  <div class="tp">
+    <p>Opcional. Sin esto, todo se guarda en este navegador. Con una URL de Apps Script, los proyectos se respaldan en tu hoja de cálculo y se comparten entre equipos.</p>
+    <label for="syncUrl">URL de la aplicación web</label><input type="text" id="syncUrl" placeholder="https://script.google.com/macros/s/…/exec">
+    <label for="syncTok">Token (el mismo de la propiedad TOKEN del script)</label><input type="text" id="syncTok" autocomplete="off">
+    <div class="grp"><button class="btn sm pri" id="syncSave">Guardar y cargar</button><button class="btn sm" id="syncOff">Desactivar</button></div>
+    <p id="syncMsg" aria-live="polite"></p>
+  </div></section>
+<button id="chip" hidden></button>
+<div id="toast" hidden></div>
+
+<script src="core.js"></script>
+<script src="app.js"></script>
+</body></html>
